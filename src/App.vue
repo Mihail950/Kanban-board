@@ -1,26 +1,37 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <RouterView v-if="!isLoad"/>
+  <h1 v-if="isLoad">sdasda</h1>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import {mapActions} from 'vuex';
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
+  methods: {
+    ...mapActions({
+      addUserInfo: 'authModule/addUserInfo',
+      GetBoards: 'boardsModule/axiosGetBoards',
+    }),
+  },
+  data () {
+        return {
+          isLoad: true
+        }
+    },
+  async created() {
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+    if (token) {
+      this.isLoad = true;
+        this.addUserInfo({ userId: userId, token: token });
+        await this.GetBoards();
+    }
+    this.isLoad = false;
   }
 }
+
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>
