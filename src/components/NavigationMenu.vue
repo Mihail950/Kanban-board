@@ -37,12 +37,10 @@ export default {
             if (this.darkTheme===true) {
                 document.body.classList.add('dark-theme');
                 localStorage.setItem('darkThemeCheckboxState', true);
-                console.log('1')
             }
             else {
                 document.body.classList.remove('dark-theme');
                 localStorage.removeItem('darkThemeCheckboxState');
-                console.log('0')
             }
         }
     },

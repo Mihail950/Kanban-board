@@ -8,16 +8,28 @@
         <p class="project-title"
             :class="{'project-title_active':board.id==boardId}"
         >{{ board.name }}</p>
-        <button @click.stop="deleteBoard" >
-            <img class="trash-icon" :class="{'trash-icon-hidden':board.id==boardId}" src="../assets/image/icons8-trash.svg">
-            <img class="trash-icon" :class="{'trash-icon-hidden':board.id!=boardId}" src="../assets/image/icons8-trash-white.svg">
-        </button>
+        <div>
+            <button @click.stop="showEditBoard" >
+                <img v-if='boardPermission.includes("manage-board")' class="edit-icon" :class="{'trash-icon-hidden':board.id==boardId}" src="../assets/image/icons8-редактировать.svg">
+                <img v-if='boardPermission.includes("manage-board")' class="edit-icon" :class="{'trash-icon-hidden':board.id!=boardId}" src="../assets/image/icons8-редактировать-white.svg">
+            </button>
+            <button @click.stop="deleteBoard" >
+                <img v-if='boardPermission.includes("delete-board")' class="trash-icon" :class="{'trash-icon-hidden':board.id==boardId}" src="../assets/image/icons8-trash.svg">
+                <img v-if='boardPermission.includes("delete-board")' class="trash-icon" :class="{'trash-icon-hidden':board.id!=boardId}" src="../assets/image/icons8-trash-white.svg">
+            </button>
+        </div>
     </div>
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import instance from "@/utils/axios.config";
 export default {
     name: 'project-item',
+    data(){
+        return{
+            boardPermission: ''
+        }
+    },
     props: {
         board: {
             type: Object,
@@ -26,7 +38,7 @@ export default {
     },
     computed: {
         ...mapGetters({
-            boardId: 'columnModule/boardId'
+            boardId: 'columnModule/boardId',
      })   
     },  
     methods: {
@@ -34,22 +46,43 @@ export default {
             axiosDeleteBoard: 'boardsModule/axiosDeleteBoard',
             loadind: 'boardsModule/loadind',
             getBoardId: 'columnModule/getBoardId',
+            getBoardDescription: 'columnModule/getBoardDescription',
             axiosGetStatuses: 'columnModule/axiosGetStatuses',
+            axiosGetCurrentPermissions: 'usersModule/axiosGetCurrentPermissions',
+            openEditBoard: 'dialogModule/openEditBoard',
+            setOwnerName: 'usersModule/setOwnerName', 
         }),
+        async axiosGetBoardPermission() {
+            const userId = localStorage.getItem('userId');
+            await instance.get(`/boards/${this.board.id}/users/${userId}/permissions`
+            ).then(response => {
+                this.boardPermission = response.data
+            }).catch(response => {
+                this.boardPermission = response.data
+            })
+        },
         async openBoard() {
             this.loadind({ value: true });
-            console.log('0');
             this.$router.push('/board/' + this.board.id);
             this.getBoardId({ boardId: this.board.id });
+            this.setOwnerName({ name: this.board.owner.name });
+            this.getBoardDescription({ description: this.board.description });
+            this.axiosGetCurrentPermissions();
             await new Promise(resolve => setTimeout(resolve, 1000));
             await this.axiosGetStatuses();
             this.loadind({ value: false });
-            console.log('1');
         },
         deleteBoard() {
             this.axiosDeleteBoard({boardId: this.board.id});
-        }
-    }
+        },
+        showEditBoard() {
+            this.openEditBoard({ board: this.board });
+        },
+    },
+    created(){
+        this.axiosGetBoardPermission();
+        this.axiosGetCurrentPermissions();
+    },
 }
 </script>
 <style scoped>
@@ -80,6 +113,10 @@ export default {
 }
 .trash-icon{
     width: 22px;
+    margin-right: 5px;
+}
+.edit-icon{
+    width: 19px;
     margin-right: 5px;
 }
 .trash-icon-hidden{

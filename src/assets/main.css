@@ -77,7 +77,7 @@ button{
     margin: 0;
     padding: 0;
     background: none;
-    transition: 0.5s;
+    transition:opacity,transform 0.5s;
 }
 button:hover{
     opacity: 0.7;
@@ -97,8 +97,10 @@ button:active{
     --date-background: #112720;
     --load-line-1:#787878;
     --load-line-2:#888888;
+    --modal-background:rgba(255, 255, 255, 0.3);
 }
 body.dark-theme {
+    transition: 2s;
     --main-background: rgba(255, 255, 255, 1);
     --main-border: rgba(247, 247, 247, 1);
     --labet-text: rgba(149, 155, 163, 1);
@@ -108,4 +110,5 @@ body.dark-theme {
     --date-background: #EDFAF6;
     --load-line-1:#e5e5e5;
     --load-line-2:#f0f0f0;
+    --modal-background:rgba(0, 0, 0, 0.7);
   }

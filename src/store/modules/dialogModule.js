@@ -160,6 +160,7 @@ const dialogModule = {
         },
         closeModal({ commit }) {
             commit('SET_DIALOG_HIDE')
+            store.state.usersModule.searchUsers = [];
         },
         openEditTask({ commit }, { task }) {
             commit('SET_OLD_TASK', task);

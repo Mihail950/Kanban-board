@@ -10,14 +10,21 @@
             />
             <button @click="showDialog" class="new-board-btn">+ Новый проект</button>
         </div>
-        <div class="analytics">
+        <div v-if="boardId">
+            <div class="analytics">
             <h2>Analytics</h2>
             <div class="board-time">
                 <h3 class="analytic-title">TOTAL TIME</h3>
                 <p class="analitic-time">2d 3h</p>
                 <img src="../assets/image/time-graph.svg" height="60px">
             </div>
-
+        </div>
+        <div class="analytics">
+            <h2>Описание: {{ description }}</h2>
+        </div>
+        <div class="analytics">
+            <h2>Владелец: {{ ownerName }}</h2>
+        </div>
         </div>
     </div>
 </template>
@@ -30,6 +37,9 @@ export default {
     computed:{
         ...mapGetters({
             boardsGetter: 'boardsModule/boards',
+            ownerName: 'usersModule/ownerName',
+            description: 'columnModule/description',
+            boardId: 'columnModule/boardId',
         })
     },
     methods: {

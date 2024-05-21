@@ -8,10 +8,11 @@
             <p class="progress-value">75% complete</p>
         </div>
         <div class="board-menu-right">
-            <button class="users-btn">
+            <button @click="openUserModal" class="users-btn">
                 Пользователи
             </button>
             <button 
+                v-if='currentPermissions.includes("manage-board-statuses")'
                 class="add-column-btn"
                 @click="showDialog"
             >
@@ -21,8 +22,13 @@
     </div>
 </template>
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 export default {
+    computed: {
+        ...mapGetters({
+            currentPermissions: 'usersModule/currentPermissions',
+     })   
+    },  
     methods: {
         ...mapActions({
             openCreateColumn: 'dialogModule/openCreateColumn',

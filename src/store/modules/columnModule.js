@@ -6,11 +6,13 @@ const columnModule = {
     state: {
         columns: [],
         boardId: '',
-        DragColumnId: ''
+        DragColumnId: '',
+        description: ''
     },
     getters: {
         columns: (state) => state.columns,
-        boardId: (state) => state.boardId
+        boardId: (state) => state.boardId,
+        description: (state) => state.description,
     },
     mutations: {
         SET_COLUMNS(state, columns) {
@@ -18,6 +20,9 @@ const columnModule = {
         },
         SET_BOARD_ID(state, boardId) {
             state.boardId = boardId;
+        },
+        SET_BOARD_DESCRIPTION(state, description) {
+            state.description = description;
         },
         SET_DRAG_COLUMN_ID(state, DragColumnId) {
             state.DragColumnId = DragColumnId;
@@ -60,6 +65,9 @@ const columnModule = {
         },
         getBoardId({ commit }, { boardId }) {
             commit('SET_BOARD_ID', boardId);
+        },
+        getBoardDescription({ commit }, { description }) {
+            commit('SET_BOARD_DESCRIPTION', description);
         }
     }
 }

@@ -88,8 +88,8 @@ export default {
     background-color: var(--main-background);
     border-radius: 6px;
     padding: 12px;
-    transition: .2s;
     position:relative;
+    transition:transform .2s;
 }
 .task:hover{
     transform: translateY(-4px);

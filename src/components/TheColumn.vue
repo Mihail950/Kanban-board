@@ -9,16 +9,20 @@
                         <p class="column-task-quantity">{{ column.tasks.length }}</p>
                     </div>
                     <div class="task-top-section task-menu">
-                        <button @click="showTaskMenu" class="more-btn">
+                        <button v-if='(currentPermissions.includes("manage-board-statuses")) || (currentPermissions.includes("delete-board-statuses"))'
+                                @click="showTaskMenu" class="more-btn"
+                        >
                             <img src="../assets/image/more-icon.svg" alt="">
                         </button>
                         <div :class="'task-menu-window--hiden '+ showMenuClass">
                             <button 
+                                v-if='currentPermissions.includes("manage-board-statuses")'
                                 :class="'task-menu-window--hiden button_edit ' + showButtonClass"
                                 @click="EditColumn"
                             >Редактировать
                             </button>
                             <button 
+                                v-if='currentPermissions.includes("delete-board-statuses")'
                                 :class="'task-menu-window--hiden button_del ' + showButtonClass" 
                                 @click="DeleteColumn"
                             >Удалить
@@ -41,7 +45,7 @@
 </template>
 <script>
 import TheTask from './TheTask.vue';
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 export default {
     components: { TheTask },
     data() {
@@ -57,6 +61,11 @@ export default {
             requared: true
         }
     },
+    computed: {
+        ...mapGetters({
+            currentPermissions: 'usersModule/currentPermissions',
+     })   
+    }, 
     methods: {
         ...mapActions({
             openCreateTask: 'dialogModule/openCreateTask',
@@ -162,7 +171,7 @@ export default {
 }
 .task-menu-window{
     position: absolute;
-    height: 50px;
+    height: min-content;
     width: 100px;
     margin: 5px 0 0 0;
     box-shadow: 8px 8px 8px 0px rgba(0, 0, 0, 0.2);
